@@ -1,0 +1,40 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.normal {
+	font-size: 11pt;
+	color: #000000;
+	background-color: #FFCC00;
+}
+
+.heading {
+	font-size: 16pt;
+	color: #FFFFFF;
+	background-color: #BB0000;
+	font-variant: small-caps;
+	text-align: center;
+	letter-spacing: 8pt;
+	word-spacing: 16pt;
+}
+
+.bodybkg {
+	background-color: #707070;
+}
+
+a:active {
+	text-decoration: none
+}
+
+a:hover {
+	text-decoration: underline;
+	background-color: #FFFFFF
+}
+
+a:link {
+	text-decoration: none
+}
+
+a:visited {
+	text-decoration: none
+}
