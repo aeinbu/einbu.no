@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 1.3em;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* colors and style */
+        .bar {
+            &>div {
+                background-color: hsl(from currentColor h s 85%);
+                /*meaning: keep hue and saturations values from currentcolor, but set luminosity to 80% */
+            }
+
+            &>div.left {
+                color: gray;
+            }
+
+            &>div.middle {
+                color: green;
+            }
+
+            &>div.right {
+                color: blue;
+            }
+        }
+
+        /* layout */
+        .bar {
+            height: 5em;
+
+            display: flex;
+
+            &>div+div {
+                margin-left: 5px;
+            }
+
+            &>div {
+                height: 1em;
+                position: relative;
+            }
+
+            &>div>.label {
+                overflow: visible;
+                position: absolute;
+                top: 1.3em;
+            }
+
+            &>div.left>.label {
+                left: 0;
+            }
+
+
+            &>div.middle>.label {
+                text-align: center;
+                width: 100%;
+            }
+
+
+            &>div.right>.label {
+                right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        Horizontal bar with labels - using css-potition attribute
+    </h1>
+    <div class="bar">
+        <div class="left">
+            <div class="bar" style="width: 10ex;"></div>
+            <div class="label">x&nbsp;not&nbsp;ready</div>
+        </div>
+        <div class="middle">
+            <div class="bar" style="width: 10ex;"></div>
+            <div class="label">y&nbsp;ready</div>
+        </div>
+        <div class="right">
+            <div class="bar" style="width: 10ex;"></div>
+            <div class="label">z&nbsp;sent</div>
+        </div>
+    </div>
+
+    <div class="bar">
+        <div class="left">
+            <div class="bar" style="width: 10ex;"></div>
+            <div class="label">x&nbsp;not&nbsp;ready</div>
+        </div>
+        <div class="middle">
+            <div class="bar" style="width: 18ex;"></div>
+            <div class="label">y&nbsp;ready</div>
+        </div>
+        <div class="right">
+            <div class="bar" style="width: 2ex;"></div>
+            <div class="label">z&nbsp;sent</div>
+        </div>
+    </div>
+
+    <div class="bar">
+        <div class="left">
+            <div class="bar" style="width: 2ex;"></div>
+            <div class="label">x&nbsp;not&nbsp;ready</div>
+        </div>
+        <div class="middle">
+            <div class="bar" style="width: 18ex;"></div>
+            <div class="label">y&nbsp;ready</div>
+        </div>
+        <div class="right">
+            <div class="bar" style="width: 10ex;"></div>
+            <div class="label">z&nbsp;sent</div>
+        </div>
+    </div>
+
+
+    <div class="bar">
+        <div class="left">
+            <div class="bar" style="width: 1ex;"></div>
+            <div class="label">x&nbsp;not&nbsp;ready</div>
+        </div>
+        <div class="middle">
+            <div class="bar" style="width: 1ex;"></div>
+            <div class="label">y&nbsp;ready</div>
+        </div>
+        <div class="right">
+            <div class="bar" style="width: 28ex;"></div>
+            <div class="label">z&nbsp;sent</div>
+        </div>
+    </div>
+
+
+    <div class="bar">
+        <div class="left">
+            <div class="bar" style="width: 28ex;"></div>
+            <div class="label">x&nbsp;not&nbsp;ready</div>
+        </div>
+        <div class="middle">
+            <div class="bar" style="width: 1ex;"></div>
+            <div class="label">y&nbsp;ready</div>
+        </div>
+        <div class="right">
+            <div class="bar" style="width: 1ex;"></div>
+            <div class="label">z&nbsp;sent</div>
+        </div>
+    </div>
+
+
+    <div class="bar">
+        <div class="left">
+            <div class="bar" style="width: 1ex;"></div>
+            <div class="label">x&nbsp;not&nbsp;ready</div>
+        </div>
+        <div class="middle">
+            <div class="bar" style="width: 28ex;"></div>
+            <div class="label">y&nbsp;ready</div>
+        </div>
+        <div class="right">
+            <div class="bar" style="width: 1ex;"></div>
+            <div class="label">z&nbsp;sent</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
