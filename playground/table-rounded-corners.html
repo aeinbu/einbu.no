@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 1.3em;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        section {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            width: 100%
+        }
+
+
+        /* Styling (colors, borders, etc)*/
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        tbody>tr:hover {
+            background-color: whitesmoke;
+        }
+
+        th,
+        td {
+            border: 1px solid gray;
+            padding: .5em 1em;
+        }
+
+        thead>tr,
+        tfoot>tr {
+            background-color: lightgray;
+        }
+
+        tbody>tr {
+            background-color: hsla(from white h s l / .5);
+        }
+
+        .solution {
+
+            /* Rounded corners */
+            table:not(:has(thead))>tbody>tr:first-child,
+            table>thead>tr:first-child {
+
+                &>td:first-child,
+                &>th:first-child {
+                    border-top-left-radius: .5em;
+                }
+
+                &>td:last-child,
+                &>th:last-child {
+                    border-top-right-radius: .5em;
+                }
+            }
+
+            table:not(:has(tfoot))>tbody>tr:last-child,
+            table>tfoot>tr:last-child {
+
+                &>td:first-child,
+                &>th:first-child {
+                    border-bottom-left-radius: .5em;
+                }
+
+                &>td:last-child,
+                &>th:last-child {
+                    border-bottom-right-radius: .5em;
+                }
+
+            }
+
+            /* cell dividers */
+            td:not(:first-child),
+            th:not(:first-child) {
+                border-left: none;
+            }
+
+            tr:not(:first-child)>td,
+            tr:not(:first-child)>th {
+                border-top: none;
+            }
+
+            thead>tr:last-child>td,
+            thead>tr:last-child>th {
+                border-bottom: none;
+            }
+
+            tfoot>tr:first-child>td,
+            tfoot>tr:first-child>th {
+                border-top: none;
+            }
+
+            .no-column-seperators {
+
+                td:not(:last-child),
+                th:not(:last-child) {
+                    border-right: none;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>
+        Tables with rounded corners
+    </h1>
+    <p>
+        It is hard to get rounded corners on tables when you have border or background styling of the cells.
+    </p>
+    <h2>
+        The problem
+    </h2>
+    <section>
+        <table style="border: thin solid red; border-radius: 1em;">
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            When styling the table cells, the cells borders and background will overlap the rounded corners of the table.
+            <br>
+            This is because the table cells are rendered on top of the table element.
+        </p>
+
+    </section>
+    <h2>The solution</h2>
+    <h2>
+        With column seperators
+    </h2>
+    <section class="solution">
+        <table>
+            <caption>Table with header and footer</caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Header 1</th>
+                    <th>Header 2</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Footer 1</th>
+                    <th>Footer 2</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table>
+            <caption>Table with header and no footer</caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Header 1</th>
+                    <th>Header 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table>
+            <caption>Table with no header or footer</caption>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <h2>
+        Without column seperators
+    </h2>
+    <section class="solution">
+        <table class="no-column-seperators">
+            <caption>Table with header and footer</caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Header 1</th>
+                    <th>Header 2</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Footer 1</th>
+                    <th>Footer 2</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="no-column-seperators">
+            <caption>Table with header and no footer</caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Header 1</th>
+                    <th>Header 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="no-column-seperators">
+            <caption>Table with no header or footer</caption>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Last Row, Cell 1</td>
+                    <td>Last Row, Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</body>
+
+</html>
