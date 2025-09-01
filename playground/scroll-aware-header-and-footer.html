@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        main {
+            margin: 1em;
+        }
+
+        .header {
+            padding-left: 1em;
+            padding-right: 1em;
+            margin: 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background-color: lightgray;
+        }
+
+        .footer {
+            padding-left: 1em;
+            padding-right: 1em;
+            margin: 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            background-color: lightgray;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            border: thin solid blue;
+            border-radius: 3px;
+            padding: .5em;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <h1>HERE GOES THE LOGO ETC - IT WILL GO AWAY WHEN SCROLLING</h1>
+        <p class="always-visible">
+            Sticky top, shrinks when scrolling down. Scroll to see the effect.
+        </p>
+    </header>
+    <div class="behind-header"></div>
+    <main>
+        <div class="box">box no. 1</div>
+        <div class="box">box no. 2</div>
+        <div class="box">box no. 3</div>
+        <div class="box">box no. 4</div>
+        <div class="box">box no. 5</div>
+        <div class="box">box no. 6</div>
+        <div class="box">box no. 7</div>
+        <div class="box">box no. 8</div>
+        <div class="box">box no. 9</div>
+        <div class="box">box no. 10</div>
+        <div class="box">box no. 11</div>
+        <div class="box">box no. 12</div>
+    </main>
+    <footer class="footer">
+        <p class="always-visible">
+            <em>Sticky Footer, grows when scrolling down, reaching the bottom of the page. Scroll to see the effect.</em>
+            <br>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus hic voluptate fugit distinctio iure
+            obcaecati cum. Sit fuga laborum blanditiis doloremque consectetur nisi, eaque magni. Itaque ullam ut nisi
+            quidem.
+        </p>
+        <p>More text below stick footer</p>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint iusto, ab rem dolor nesciunt culpa, harum
+            aliquid, aspernatur maiores deserunt beatae dolorum animi ducimus! Aliquid sit distinctio qui dolor
+            quibusdam.
+        </p>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint iusto, ab rem dolor nesciunt culpa, harum
+            aliquid, aspernatur maiores deserunt beatae dolorum animi ducimus! Aliquid sit distinctio qui dolor
+            quibusdam.
+        </p>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint iusto, ab rem dolor nesciunt culpa, harum
+            aliquid, aspernatur maiores deserunt beatae dolorum animi ducimus! Aliquid sit distinctio qui dolor
+            quibusdam.
+        </p>
+    </footer>
+    <div class="behind-footer"></div>
+
+    <script>
+        // Animate different values
+        const header = document.querySelector('.header');
+        const headerBehind = document.querySelector('.behind-header');
+        const headerAlwaysVisible = document.querySelector('.header>.always-visible');
+
+
+        const footer = document.querySelector('.footer');
+        const footerBehind = document.querySelector('.behind-footer');
+        const footerAlwaysVisible = document.querySelector('.footer>.always-visible');
+
+
+        function animateOnScroll() {
+            // Get scroll positions
+            const scrollTop = Math.max(0, window.pageYOffset || document.documentElement.scrollTop);
+            const scrollBottom = Math.max(0, document.documentElement.scrollHeight - (scrollTop + window.innerHeight));
+
+            // Animate the header
+            const headerFullHeight = header.offsetHeight;
+            const headerAlwaysVisibleStyles = window.getComputedStyle(headerAlwaysVisible);
+            const headerAlwaysVisibleHeight = parseFloat(headerAlwaysVisibleStyles.marginTop) + parseFloat(headerAlwaysVisibleStyles.marginBottom) + headerAlwaysVisible.offsetHeight;
+            const headerTranslateY = Math.min(scrollTop, headerFullHeight - headerAlwaysVisibleHeight);
+            header.style.transform = `translateY(-${headerTranslateY}px)`;
+
+            headerBehind.style.height = `${headerFullHeight}px`;
+
+            // Animate the footer
+            const footerFullHeight = footer.offsetHeight;
+            const footerAlwaysVisibleStyles = window.getComputedStyle(footerAlwaysVisible);
+            const footerAlwaysVisibleHeight = parseFloat(footerAlwaysVisibleStyles.marginTop) + parseFloat(footerAlwaysVisibleStyles.marginBottom) + footerAlwaysVisible.offsetHeight;
+            const footerTranslateY = Math.min(scrollBottom, footerFullHeight - footerAlwaysVisibleHeight);
+            footer.style.transform = `translateY(${footerTranslateY}px)`;
+
+            footerBehind.style.height = `${Math.max(footerFullHeight - scrollBottom, footerFullHeight)}px`;
+        }
+
+        // Listen for scroll events
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('resize', animateOnScroll);
+
+        // Initial call
+        animateOnScroll();
+    </script>
+</body>
+
+</html>
