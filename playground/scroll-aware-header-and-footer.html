@@ -7,28 +7,28 @@
             margin: 0;
         }
 
-        main {
-            margin: 1em;
-        }
-
         .header {
-            padding-left: 1em;
-            padding-right: 1em;
             margin: 0;
-            position: fixed;
-            width: 100%;
+            position: sticky;
             top: 0;
-            background-color: lightgray;
         }
 
         .footer {
-            padding-left: 1em;
-            padding-right: 1em;
             margin: 0;
-            position: fixed;
-            width: 100%;
+            position: sticky;
             bottom: 0;
+        }
+
+        .header>div,
+        .footer>div {
             background-color: lightgray;
+            padding: .5em 1em;
+            margin: 0em;
+        }
+
+
+        main {
+            margin: 1em;
         }
 
         .box {
@@ -45,12 +45,14 @@
 
 <body>
     <header class="header">
-        <h1>HERE GOES THE LOGO ETC - IT WILL GO AWAY WHEN SCROLLING</h1>
-        <p class="always-visible">
-            Sticky top, shrinks when scrolling down. Scroll to see the effect.
-        </p>
+        <div>
+            <h2>This part of the header will disappear when you scroll down</h2>
+            <em>Scroll down to see the effect</em>
+        </div>
+        <div class="always-visible">
+            This is the sticky part on top
+        </div>
     </header>
-    <div class="behind-header"></div>
     <main>
         <div class="box">box no. 1</div>
         <div class="box">box no. 2</div>
@@ -66,28 +68,25 @@
         <div class="box">box no. 12</div>
     </main>
     <footer class="footer">
-        <p class="always-visible">
-            <em>Sticky Footer, grows when scrolling down, reaching the bottom of the page. Scroll to see the effect.</em>
-            <br>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus hic voluptate fugit distinctio iure
-            obcaecati cum. Sit fuga laborum blanditiis doloremque consectetur nisi, eaque magni. Itaque ullam ut nisi
-            quidem.
-        </p>
-        <p>More text below stick footer</p>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint iusto, ab rem dolor nesciunt culpa, harum
-            aliquid, aspernatur maiores deserunt beatae dolorum animi ducimus! Aliquid sit distinctio qui dolor
-            quibusdam.
-        </p>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint iusto, ab rem dolor nesciunt culpa, harum
-            aliquid, aspernatur maiores deserunt beatae dolorum animi ducimus! Aliquid sit distinctio qui dolor
-            quibusdam.
-        </p>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint iusto, ab rem dolor nesciunt culpa, harum
-            aliquid, aspernatur maiores deserunt beatae dolorum animi ducimus! Aliquid sit distinctio qui dolor
-            quibusdam.
-        </p>
+        <div class="always-visible">
+            This is the sticky part on bottom
+            <p>
+                <em>
+                    The rest of the footer appears when you reach the bottom of the document
+                    <br />
+                    Scroll to see the effect
+                </em>
+            </p>
+        </div>
+        <div>
+            <h2>This part of the footer should appear when you are at the bottom of the document</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Libero reprehenderit distinctio nisi
+                laboriosam sed at cum eos enim incidunt, pariatur dolorum illo blanditiis corrupti odit et voluptatum
+                voluptas? Obcaecati, blanditiis. Quis, doloribus. Doloribus, quas doloremque. Quisquam, quidem.
+                Quisquam, quidem.
+            </p>
     </footer>
-    <div class="behind-footer"></div>
 
     <script>
         // Animate different values
@@ -107,30 +106,26 @@
             const scrollBottom = Math.max(0, document.documentElement.scrollHeight - (scrollTop + window.innerHeight));
 
             // Animate the header
-            const headerFullHeight = header.offsetHeight;
-            const headerAlwaysVisibleStyles = window.getComputedStyle(headerAlwaysVisible);
-            const headerAlwaysVisibleHeight = parseFloat(headerAlwaysVisibleStyles.marginTop) + parseFloat(headerAlwaysVisibleStyles.marginBottom) + headerAlwaysVisible.offsetHeight;
-            const headerTranslateY = Math.min(scrollTop, headerFullHeight - headerAlwaysVisibleHeight);
-            header.style.transform = `translateY(-${headerTranslateY}px)`;
-
-            headerBehind.style.height = `${headerFullHeight}px`;
+            const headerAlwaysVisibleStyles = window.getComputedStyle(headerAlwaysVisible)
+            const headerAlwaysVisibleHeight = parseFloat(headerAlwaysVisibleStyles.marginTop) + parseFloat(headerAlwaysVisibleStyles.marginBottom) + headerAlwaysVisible.offsetHeight
+            const headerFullHeight = header.offsetHeight
+            const headerTranslateY = Math.min(scrollTop, headerFullHeight - headerAlwaysVisibleHeight)
+            header.style.transform = `translateY(-${headerTranslateY}px)`
 
             // Animate the footer
+            const footerAlwaysVisibleStyles = window.getComputedStyle(footerAlwaysVisible)
+            const footerAlwaysVisibleHeight = parseFloat(footerAlwaysVisibleStyles.marginTop) + parseFloat(footerAlwaysVisibleStyles.marginBottom) + footerAlwaysVisible.offsetHeight
             const footerFullHeight = footer.offsetHeight;
-            const footerAlwaysVisibleStyles = window.getComputedStyle(footerAlwaysVisible);
-            const footerAlwaysVisibleHeight = parseFloat(footerAlwaysVisibleStyles.marginTop) + parseFloat(footerAlwaysVisibleStyles.marginBottom) + footerAlwaysVisible.offsetHeight;
-            const footerTranslateY = Math.min(scrollBottom, footerFullHeight - footerAlwaysVisibleHeight);
-            footer.style.transform = `translateY(${footerTranslateY}px)`;
-
-            footerBehind.style.height = `${Math.max(footerFullHeight - scrollBottom, footerFullHeight)}px`;
+            const footerTranslateY = Math.min(scrollBottom, footerFullHeight - footerAlwaysVisibleHeight)
+            footer.style.transform = `translateY(${footerTranslateY}px)`
         }
 
         // Listen for scroll events
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('resize', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll)
+        window.addEventListener('resize', animateOnScroll)
 
         // Initial call
-        animateOnScroll();
+        animateOnScroll()
     </script>
 </body>
 
