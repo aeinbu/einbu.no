@@ -56,16 +56,6 @@
     <main>
         <div class="box">box no. 1</div>
         <div class="box">box no. 2</div>
-        <div class="box">box no. 3</div>
-        <div class="box">box no. 4</div>
-        <div class="box">box no. 5</div>
-        <div class="box">box no. 6</div>
-        <div class="box">box no. 7</div>
-        <div class="box">box no. 8</div>
-        <div class="box">box no. 9</div>
-        <div class="box">box no. 10</div>
-        <div class="box">box no. 11</div>
-        <div class="box">box no. 12</div>
     </main>
     <footer class="footer">
         <div class="always-visible">
@@ -101,9 +91,8 @@
 
 
         function animateOnScroll() {
-            // Get scroll positions
+            // Get the top scroll position
             const scrollTop = Math.max(0, window.pageYOffset || document.documentElement.scrollTop);
-            const scrollBottom = Math.max(0, document.documentElement.scrollHeight - (scrollTop + window.innerHeight));
 
             // Animate the header
             const headerAlwaysVisibleStyles = window.getComputedStyle(headerAlwaysVisible)
@@ -112,12 +101,21 @@
             const headerTranslateY = Math.min(scrollTop, headerFullHeight - headerAlwaysVisibleHeight)
             header.style.transform = `translateY(-${headerTranslateY}px)`
 
+            // Reset footer margin top before calculating anything for the footer
+            footer.style.marginTop = `0px`
+            // Get the bottom scroll position
+            const scrollBottom = Math.max(0, document.documentElement.scrollHeight - (scrollTop + window.innerHeight));
+
             // Animate the footer
             const footerAlwaysVisibleStyles = window.getComputedStyle(footerAlwaysVisible)
             const footerAlwaysVisibleHeight = parseFloat(footerAlwaysVisibleStyles.marginTop) + parseFloat(footerAlwaysVisibleStyles.marginBottom) + footerAlwaysVisible.offsetHeight
             const footerFullHeight = footer.offsetHeight;
             const footerTranslateY = Math.min(scrollBottom, footerFullHeight - footerAlwaysVisibleHeight)
             footer.style.transform = `translateY(${footerTranslateY}px)`
+
+            const rect = footer.previousElementSibling.getBoundingClientRect()
+            const marginTop = Math.max(0, window.innerHeight - (rect.bottom + scrollTop) - footerFullHeight)
+            footer.style.marginTop = `${marginTop}px`
         }
 
         // Listen for scroll events
