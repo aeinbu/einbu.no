@@ -15,9 +15,11 @@
 	<nav class="nav-menu">
 		<button class="nav-toggle" aria-label="Toggle navigation">☰ Menu</button>
 		<ul class="nav-list">
-			<li><a href="../table-rounded-corners.html">Table with rounded corners</a></li>
-			<li><a href="../scroll-aware-header-and-footer.html">Scroll-aware header and footer</a></li>
-			<li><a href="../bar-css-position.html">Bar using CSS position</a></li>
+			<li><a href="#">Item one</a></li>
+			<li><a href="#">Item two</a></li>
+			<li><a href="#">Item three</a></li>
+			<li><a href="#">Item four</a></li>
+			<li><a href="#">Item five</a></li>
 		</ul>
 	</nav>
 	<div class="content-wrapper">
@@ -32,9 +34,25 @@
 	<script>
 		const navToggle = document.querySelector('.nav-toggle');
 		const navList = document.querySelector('.nav-list');
+		const navMenu = document.querySelector('.nav-menu');
 		
-		navToggle.addEventListener('click', () => {
+		navToggle.addEventListener('click', (e) => {
+			e.stopPropagation();
 			navList.classList.toggle('active');
+		});
+
+		// Close menu when clicking outside
+		document.addEventListener('click', (e) => {
+			if (!navMenu.contains(e.target) && navList.classList.contains('active')) {
+				navList.classList.remove('active');
+			}
+		});
+
+		// Close menu when clicking a link
+		navList.querySelectorAll('a').forEach(link => {
+			link.addEventListener('click', () => {
+				navList.classList.remove('active');
+			});
 		});
 	</script>
 </body>
