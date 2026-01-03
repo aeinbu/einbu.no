@@ -68,6 +68,10 @@ header h1 {
 	border-bottom: 1px solid #ddd;
 }
 
+.nav-list > li:last-child {
+	border-bottom: none;
+}
+
 .nav-list a {
 	display: block;
 	color: #333;
@@ -78,6 +82,59 @@ header h1 {
 
 .nav-list a:hover {
 	background-color: #e8e8e8;
+}
+
+/* Submenu styles */
+.submenu-toggle {
+	display: block;
+	width: 100%;
+	background: none;
+	border: none;
+	color: #333;
+	text-align: left;
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	font-size: 1rem;
+	font-family: inherit;
+}
+
+.submenu-toggle:hover {
+	background-color: #e8e8e8;
+}
+
+.submenu-toggle .arrow {
+	float: right;
+	transition: transform 0.3s;
+	display: inline-block;
+	font-size: 0.8em;
+}
+
+.submenu {
+	display: none;
+	list-style: none;
+	background-color: #e8e8e8;
+}
+
+.has-submenu.open .submenu {
+	display: block;
+}
+
+.submenu li {
+	border-bottom: 1px solid #ddd;
+}
+
+.submenu li:last-child {
+	border-bottom: none;
+}
+
+.submenu a {
+	padding-left: 2rem;
+	background-color: #e8e8e8;
+}
+
+.submenu a:hover {
+	background-color: #d0d0d0;
 }
 
 /* Content wrapper */

@@ -15,11 +15,30 @@
 	<nav class="nav-menu">
 		<button class="nav-toggle" aria-label="Toggle navigation">☰ Menu</button>
 		<ul class="nav-list">
-			<li><a href="#">Item one</a></li>
-			<li><a href="#">Item two</a></li>
-			<li><a href="#">Item three</a></li>
-			<li><a href="#">Item four</a></li>
-			<li><a href="#">Item five</a></li>
+			<li>
+				<a href="#">Item one</a>
+			</li>
+			<li class="has-submenu">
+				<button class="submenu-toggle">Item two <span class="arrow">▶</span></button>
+				<ul class="submenu">
+					<li><a href="#">Sub-item 2.1</a></li>
+					<li><a href="#">Sub-item 2.2</a></li>
+					<li><a href="#">Sub-item 2.3</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Item three</a>
+			</li>
+			<li class="has-submenu">
+				<button class="submenu-toggle">Item four <span class="arrow">▶</span></button>
+				<ul class="submenu">
+					<li><a href="#">Sub-item 4.1</a></li>
+					<li><a href="#">Sub-item 4.2</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Item five</a>
+			</li>
 		</ul>
 	</nav>
 	<div class="content-wrapper">
@@ -52,6 +71,19 @@
 		navList.querySelectorAll('a').forEach(link => {
 			link.addEventListener('click', () => {
 				navList.classList.remove('active');
+			});
+		});
+
+		// Handle submenu toggles
+		document.querySelectorAll('.submenu-toggle').forEach(toggle => {
+			toggle.addEventListener('click', (e) => {
+				e.stopPropagation();
+				const parent = toggle.parentElement;
+				const submenu = parent.querySelector('.submenu');
+				const arrow = toggle.querySelector('.arrow');
+				
+				parent.classList.toggle('open');
+				arrow.style.transform = parent.classList.contains('open') ? 'rotate(90deg)' : 'rotate(0deg)';
 			});
 		});
 	</script>
