@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Responsive layout</title>
+	<link rel="stylesheet" href="layout.css">
+</head>
+
+<body>
+	<header>
+		<h1>Responsive layout playground</h1>
+	</header>
+	<nav class="nav-menu">
+		<button class="nav-toggle" aria-label="Toggle navigation">☰ Menu</button>
+		<ul class="nav-list">
+			<li><a href="../table-rounded-corners.html">Table with rounded corners</a></li>
+			<li><a href="../scroll-aware-header-and-footer.html">Scroll-aware header and footer</a></li>
+			<li><a href="../bar-css-position.html">Bar using CSS position</a></li>
+		</ul>
+	</nav>
+	<div class="content-wrapper">
+		<main>
+			<p>This is a playground for responsive layout techniques.</p>
+			<p>Resize your browser window to see the navigation change from a sidebar to a dropdown menu.</p>
+		</main>
+	</div>
+	<footer>
+		<p>Footer</p>
+	</footer>
+	<script>
+		const navToggle = document.querySelector('.nav-toggle');
+		const navList = document.querySelector('.nav-list');
+		
+		navToggle.addEventListener('click', () => {
+			navList.classList.toggle('active');
+		});
+	</script>
+</body>
+
+</html>
