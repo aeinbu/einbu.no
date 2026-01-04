@@ -81,26 +81,42 @@
 			});
 		});
 
+		// Close all submenus when any top-level item is clicked
+		document.querySelectorAll('.nav-list > li').forEach(li => {
+			li.addEventListener('click', (e) => {
+				// Only if clicking on the direct child (not bubbling from submenu)
+				if (e.target.closest('li') === li) {
+					document.querySelectorAll('.has-submenu.open').forEach(item => {
+						if (item !== li) {
+							item.classList.remove('open');
+							const arrow = item.querySelector('.arrow');
+							if (arrow) arrow.style.transform = 'rotate(0deg)';
+						}
+					});
+				}
+			});
+		});
+
 		// Handle submenu toggles
 		document.querySelectorAll('.submenu-toggle').forEach(toggle => {
 			toggle.addEventListener('click', (e) => {
 				e.stopPropagation();
 				const parent = toggle.parentElement;
-				const isOpen = parent.classList.contains('open');
+				const isCurrentlyOpen = parent.classList.contains('open');
 				
-				// Close all other open submenus
+				// Close all open submenus
 				document.querySelectorAll('.has-submenu.open').forEach(item => {
-					if (item !== parent) {
-						item.classList.remove('open');
-						const otherArrow = item.querySelector('.arrow');
-						if (otherArrow) otherArrow.style.transform = 'rotate(0deg)';
-					}
+					item.classList.remove('open');
+					const otherArrow = item.querySelector('.arrow');
+					if (otherArrow) otherArrow.style.transform = 'rotate(0deg)';
 				});
 				
-				// Toggle current submenu
-				parent.classList.toggle('open');
-				const arrow = toggle.querySelector('.arrow');
-				arrow.style.transform = parent.classList.contains('open') ? 'rotate(90deg)' : 'rotate(0deg)';
+				// If the clicked submenu wasn't open, open it
+				if (!isCurrentlyOpen) {
+					parent.classList.add('open');
+					const arrow = toggle.querySelector('.arrow');
+					arrow.style.transform = 'rotate(90deg)';
+				}
 			});
 		});
 
