@@ -15,30 +15,37 @@
 	<nav class="nav-menu">
 		<button class="nav-toggle" aria-label="Toggle navigation">☰ Menu</button>
 		<ul class="nav-list">
+
 			<li>
-				<a href="#">Item one</a>
+				<a href="#">Archive</a>
 			</li>
+
+			<li>
+				<a href="#">Documents and media</a>
+			</li>
+
 			<li class="has-submenu">
-				<button class="submenu-toggle">Item two <span class="arrow">▶</span></button>
+				<button class="submenu-toggle">External <span class="arrow">▶</span></button>
 				<ul class="submenu">
-					<li><a href="#">Sub-item 2.1</a></li>
-					<li><a href="#">Sub-item 2.2</a></li>
-					<li><a href="#">Sub-item 2.3</a></li>
+					<li><a href="#">my.name@example.com</a></li>
+					<li><a href="#">other.email@example.com</a></li>
+					<li><a href="#">Dropbox (my.name@example.com)</a></li>
+					<li><a href="#">Manage external sources</a></li>
 				</ul>
 			</li>
+
 			<li>
 				<a href="#">Item three</a>
 			</li>
+
 			<li class="has-submenu">
-				<button class="submenu-toggle">Item four <span class="arrow">▶</span></button>
+				<button class="submenu-toggle">Profile<span class="arrow">▶</span></button>
 				<ul class="submenu">
-					<li><a href="#">Sub-item 4.1</a></li>
-					<li><a href="#">Sub-item 4.2</a></li>
+					<li><a href="#">My profile</a></li>
+					<li><a href="#">Preferences</a></li>
 				</ul>
 			</li>
-			<li>
-				<a href="#">Item five</a>
-			</li>
+
 		</ul>
 	</nav>
 	<div class="content-wrapper">
@@ -79,12 +86,33 @@
 			toggle.addEventListener('click', (e) => {
 				e.stopPropagation();
 				const parent = toggle.parentElement;
-				const submenu = parent.querySelector('.submenu');
-				const arrow = toggle.querySelector('.arrow');
+				const isOpen = parent.classList.contains('open');
 				
+				// Close all other open submenus
+				document.querySelectorAll('.has-submenu.open').forEach(item => {
+					if (item !== parent) {
+						item.classList.remove('open');
+						const otherArrow = item.querySelector('.arrow');
+						if (otherArrow) otherArrow.style.transform = 'rotate(0deg)';
+					}
+				});
+				
+				// Toggle current submenu
 				parent.classList.toggle('open');
+				const arrow = toggle.querySelector('.arrow');
 				arrow.style.transform = parent.classList.contains('open') ? 'rotate(90deg)' : 'rotate(0deg)';
 			});
+		});
+
+		// Close submenus when clicking outside
+		document.addEventListener('click', (e) => {
+			if (!e.target.closest('.nav-menu')) {
+				document.querySelectorAll('.has-submenu.open').forEach(item => {
+					item.classList.remove('open');
+					const arrow = item.querySelector('.arrow');
+					if (arrow) arrow.style.transform = 'rotate(0deg)';
+				});
+			}
 		});
 	</script>
 </body>
