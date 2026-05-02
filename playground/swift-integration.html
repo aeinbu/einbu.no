@@ -8,13 +8,17 @@
 <body>
     <h1>Swift Integration Test</h1>
     <p>Click the button below to trigger a barcode scan from a webpage displayed in a native iOS app</p>
-    <button onclick='scanBarcode("barcodeResult")'>
+    <button onclick='scanBarcode("barcodeResult1")'>
         Trigger barcode scan in iOS
     </button>
 
-    <input type="text" id="barcodeResult" placeholder="Scanned barcode will appear here" readonly>
+    <input type="text" id="barcodeResult1" placeholder="Scanned barcode will appear here" readonly>
 
-    <script>
+    <hr>
+
+    <input type="text" id="barcodeResult2" placeholder="Type something here" onclick='scanBarcode("barcodeResult2")'>
+
+<script>
         window.onload = function() {
             if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.bridge) {
                 console.log("Bridge is available");
@@ -25,15 +29,15 @@
 
         function scanBarcode(htmlId) {
             if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.bridge) {
-                window.webkit.messageHandlers.bridge.postMessage({"action": "scanBarcode"});
+                window.webkit.messageHandlers.bridge.postMessage({"action": "scanBarcode", "htmlId": htmlId})
             } else {
                 console.log("Bridge is not available");
             }
         }
-        function handleBarcodeScanResult(result) {
+        function handleBarcodeScanResult(result, htmlId) {
             console.log("Received barcode scan result: " + result);
-            alert("Scanned barcode: " + result);
-            document.getElementById("barcodeResult").value = result;
+            // alert("Scanned barcode: " + result);
+            document.getElementById(htmlId).value = result;
         }
     </script>
 </body>
