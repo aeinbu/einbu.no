@@ -123,7 +123,8 @@
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
       await waitForIceGathering();
-      const encoded = btoa(JSON.stringify(pc.localDescription));
+      const encoded = JSON.stringify(pc.localDescription);
+    //   const encoded = btoa(JSON.stringify(pc.localDescription));
       document.getElementById('offerOut').value = encoded;
     };
 
@@ -134,12 +135,14 @@
     // --- Step 2: Accept Offer & Create Answer (Callee) ---
     document.getElementById('acceptOfferBtn').onclick = async () => {
       const encoded = document.getElementById('offerIn').value.trim();
-      const offer = JSON.parse(atob(encoded));
+      const offer = JSON.parse(encoded);
+    //   const offer = JSON.parse(atob(encoded));
       await pc.setRemoteDescription(new RTCSessionDescription(offer));
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
       await waitForIceGathering();
-      const answerEncoded = btoa(JSON.stringify(pc.localDescription));
+      const answerEncoded = JSON.stringify(pc.localDescription);
+    //   const answerEncoded = btoa(JSON.stringify(pc.localDescription));
       document.getElementById('answerOut').value = answerEncoded;
     };
 
@@ -150,7 +153,8 @@
     // --- Step 4: Accept Answer (Caller) ---
     document.getElementById('acceptAnswerBtn').onclick = async () => {
       const encoded = document.getElementById('answerIn').value.trim();
-      const answer = JSON.parse(atob(encoded));
+      const answer = JSON.parse(encoded);
+    //   const answer = JSON.parse(atob(encoded));
       await pc.setRemoteDescription(new RTCSessionDescription(answer));
     };
 
