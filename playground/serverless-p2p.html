@@ -24,7 +24,8 @@
         }
 
         textarea {
-            width: 100%;
+            width: calc(100% - 16px - 2px);
+            padding: 8px;
             height: 80px;
             font-family: monospace;
             font-size: 12px;
@@ -76,6 +77,9 @@
     </div>
 
     <div class="steps-grid">
+
+        <div style="grid-area: 1 / 2 / 5 / 3; display:block; background: #00000022;">
+        </div>
 
         <div id="step1" style="grid-area: caller-header;">
             <h2>Caller</h2>
@@ -204,7 +208,6 @@
             await pc.setLocalDescription(offer);
             await waitForIceGathering();
             const encoded = JSON.stringify(pc.localDescription);
-            //   const encoded = btoa(JSON.stringify(pc.localDescription));
             document.getElementById('offerOut').value = encoded;
         };
 
@@ -216,13 +219,11 @@
         document.getElementById('acceptOfferBtn').onclick = async () => {
             const encoded = document.getElementById('offerIn').value.trim();
             const offer = JSON.parse(encoded);
-            //   const offer = JSON.parse(atob(encoded));
             await pc.setRemoteDescription(new RTCSessionDescription(offer));
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
             await waitForIceGathering();
             const answerEncoded = JSON.stringify(pc.localDescription);
-            //   const answerEncoded = btoa(JSON.stringify(pc.localDescription));
             document.getElementById('answerOut').value = answerEncoded;
         };
 
@@ -234,7 +235,6 @@
         document.getElementById('acceptAnswerBtn').onclick = async () => {
             const encoded = document.getElementById('answerIn').value.trim();
             const answer = JSON.parse(encoded);
-            //   const answer = JSON.parse(atob(encoded));
             await pc.setRemoteDescription(new RTCSessionDescription(answer));
         };
 
