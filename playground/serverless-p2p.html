@@ -1,176 +1,257 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <title>WebRTC P2P — No Signaling Server</title>
-  <style>
-    body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
-    video { width: 300px; border: 1px solid #ccc; margin: 5px; background: #000; }
-    #videos { display: flex; gap: 10px; }
-    textarea { width: 100%; height: 80px; font-family: monospace; font-size: 12px; }
-    button { padding: 8px 16px; margin: 4px; cursor: pointer; }
-    #status { font-weight: bold; margin: 10px 0; }
-  </style>
+    <meta charset="utf-8">
+    <title>WebRTC P2P — No Signaling Server</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        video {
+            width: 300px;
+            border: 1px solid #ccc;
+            margin: 5px;
+            background: #000;
+        }
+
+        #videos {
+            display: flex;
+            gap: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin: 4px;
+            cursor: pointer;
+        }
+
+        #status {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: 1fr 30px 1fr;
+            grid-template-rows: auto;
+            grid-template-areas:
+                "caller-header . answerer-header"
+                "step1 s1-2 step2"
+                ". . s2-3"
+                "step4 s3-4 step3";
+            gap: 1em;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>WebRTC P2P — No Signaling Server</h1>
-  <div id="status">Status: Not connected</div>
+    <h1>WebRTC P2P — No Signaling Server</h1>
+    <div id="status">Status: Not connected</div>
 
-  <div id="videos">
-    <div>
-      <p>Local</p>
-      <video id="local" autoplay muted playsinline></video>
+    <div id="videos">
+        <div>
+            <p>Local</p>
+            <video id="local" autoplay muted playsinline></video>
+        </div>
+        <div>
+            <p>Remote</p>
+            <video id="remote" autoplay playsinline></video>
+        </div>
     </div>
+
+    <hr>
+
     <div>
-      <p>Remote</p>
-      <video id="remote" autoplay playsinline></video>
     </div>
-  </div>
 
-  <hr>
+    <div class="steps-grid">
 
-  <div>
-    <button id="callBtn">1. Call (Create Offer)</button>
-    <button id="answerBtn">2. Answer (Accept Offer)</button>
-  </div>
+        <div id="step1" style="grid-area: caller-header;">
+            <h2>Caller</h2>
 
-  <h3>Step 1: Copy/Paste Offer</h3>
-  <textarea id="offerOut" readonly placeholder="Offer will appear here after clicking Call"></textarea>
-  <br>
-  <button id="copyOfferBtn">Copy Offer</button>
+            <button id="callBtn">1. Call (Create Offer)</button>
+        </div>
 
-  <h3>Step 2: Paste Offer (on answering peer)</h3>
-  <textarea id="offerIn" placeholder="Paste the offer from the other peer here"></textarea>
-  <br>
-  <button id="acceptOfferBtn">Accept Offer &amp; Generate Answer</button>
+        <div style="grid-area: step1">
+            <h3>Step 1: Copy/Paste Offer</h3>
+            <textarea id="offerOut" readonly placeholder="Offer will appear here after clicking Call"></textarea>
+            <br>
+            <button id="copyOfferBtn">Copy Offer</button>
+        </div>
 
-  <h3>Step 3: Copy/Paste Answer</h3>
-  <textarea id="answerOut" readonly placeholder="Answer will appear here after accepting offer"></textarea>
-  <br>
-  <button id="copyAnswerBtn">Copy Answer</button>
+        <div style="grid-area: s1-2; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size: 24px; font-weight: bold;">&rarr;</span>
+        </div>
 
-  <h3>Step 4: Paste Answer (on calling peer)</h3>
-  <textarea id="answerIn" placeholder="Paste the answer from the other peer here"></textarea>
-  <br>
-  <button id="acceptAnswerBtn">Accept Answer</button>
+        <div style="grid-area: answerer-header;">
+            <h2>Answerer</h2>
 
-  <hr>
+        </div>
 
-  <h3>Data Channel Chat</h3>
-  <input id="chatInput" placeholder="Type a message..." style="width: 70%">
-  <button id="sendBtn">Send</button>
-  <div id="chatLog" style="border:1px solid #ccc; padding:10px; height:150px; overflow-y:auto; margin-top:10px;"></div>
+        <div style="grid-area: step2;">
+            <h3>Step 2: Paste Offer (on answering peer)</h3>
+            <textarea id="offerIn" placeholder="Paste the offer from the other peer here"></textarea>
+            <br>
+            <button id="acceptOfferBtn">Accept Offer &amp; Generate Answer</button>
+        </div>
 
-  <script>
-    const pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-    });
+        <div style="grid-area: s2-3; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size: 24px; font-weight: bold;">&darr;</span>
+        </div>
 
-    let dc; // data channel
+        <div style="grid-area: step3;">
+            <h3>Step 3: Copy/Paste Answer</h3>
+            <textarea id="answerOut" readonly placeholder="Answer will appear here after accepting offer"></textarea>
+            <br>
+            <button id="copyAnswerBtn">Copy Answer</button>
+        </div>
 
-    // --- Media ---
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then(stream => {
-        document.getElementById('local').srcObject = stream;
-        stream.getTracks().forEach(t => pc.addTrack(t, stream));
-      })
-      .catch(err => console.error('getUserMedia error:', err));
+        <div style="grid-area: s3-4; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size: 24px; font-weight: bold;">&larr;</span>
+        </div>
 
-    pc.ontrack = e => {
-      document.getElementById('remote').srcObject = e.streams[0];
-    };
+        <div id="step4" style="grid-area: step4;">
+            <h3>Step 4: Paste Answer (on calling peer)</h3>
+            <textarea id="answerIn" placeholder="Paste the answer from the other peer here"></textarea>
+            <br>
+            <button id="acceptAnswerBtn">Accept Answer</button>
+        </div>
 
-    // --- ICE Gathering Wait ---
-    function waitForIceGathering() {
-      return new Promise(resolve => {
-        if (pc.iceGatheringState === 'complete') return resolve();
-        pc.onicegatheringstatechange = () => {
-          if (pc.iceGatheringState === 'complete') resolve();
+    </div>
+
+
+
+
+    <hr>
+
+    <h3>Data Channel Chat</h3>
+    <input id="chatInput" placeholder="Type a message..." style="width: 70%">
+    <button id="sendBtn">Send</button>
+    <div id="chatLog" style="border:1px solid #ccc; padding:10px; height:150px; overflow-y:auto; margin-top:10px;">
+    </div>
+
+    <script>
+        const pc = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        });
+
+        let dc; // data channel
+
+        // --- Media ---
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                document.getElementById('local').srcObject = stream;
+                stream.getTracks().forEach(t => pc.addTrack(t, stream));
+            })
+            .catch(err => console.error('getUserMedia error:', err));
+
+        pc.ontrack = e => {
+            document.getElementById('remote').srcObject = e.streams[0];
         };
-      });
-    }
 
-    // --- Status ---
-    pc.oniceconnectionstatechange = () => {
-      const state = pc.iceConnectionState;
-      document.getElementById('status').textContent = 'Status: ' + state;
-      if (state === 'connected' || state === 'completed') {
-        document.getElementById('status').style.color = 'green';
-      } else if (state === 'failed' || state === 'disconnected') {
-        document.getElementById('status').style.color = 'red';
-      }
-    };
+        // --- ICE Gathering Wait ---
+        function waitForIceGathering() {
+            return new Promise(resolve => {
+                if (pc.iceGatheringState === 'complete') return resolve();
+                pc.onicegatheringstatechange = () => {
+                    if (pc.iceGatheringState === 'complete') resolve();
+                };
+            });
+        }
 
-    // --- Data Channel ---
-    // Caller creates the channel
-    function setupDataChannel(channel) {
-      dc = channel;
-      dc.onopen = () => logChat('System', 'Data channel open!');
-      dc.onmessage = e => logChat('Peer', e.data);
-    }
+        // --- Status ---
+        pc.oniceconnectionstatechange = () => {
+            const state = pc.iceConnectionState;
+            document.getElementById('status').textContent = 'Status: ' + state;
+            if (state === 'connected' || state === 'completed') {
+                document.getElementById('status').style.color = 'green';
+            } else if (state === 'failed' || state === 'disconnected') {
+                document.getElementById('status').style.color = 'red';
+            }
+        };
 
-    pc.ondatachannel = e => setupDataChannel(e.channel);
+        // --- Data Channel ---
+        // Caller creates the channel
+        function setupDataChannel(channel) {
+            dc = channel;
+            dc.onopen = () => logChat('System', 'Data channel open!');
+            dc.onmessage = e => logChat('Peer', e.data);
+        }
 
-    function logChat(who, msg) {
-      const div = document.getElementById('chatLog');
-      div.innerHTML += '<b>' + who + ':</b> ' + msg + '<br>';
-      div.scrollTop = div.scrollHeight;
-    }
+        pc.ondatachannel = e => setupDataChannel(e.channel);
 
-    // --- Step 1: Create Offer (Caller) ---
-    document.getElementById('callBtn').onclick = async () => {
-      setupDataChannel(pc.createDataChannel('chat'));
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      await waitForIceGathering();
-      const encoded = JSON.stringify(pc.localDescription);
-    //   const encoded = btoa(JSON.stringify(pc.localDescription));
-      document.getElementById('offerOut').value = encoded;
-    };
+        function logChat(who, msg) {
+            const div = document.getElementById('chatLog');
+            div.innerHTML += '<b>' + who + ':</b> ' + msg + '<br>';
+            div.scrollTop = div.scrollHeight;
+        }
 
-    document.getElementById('copyOfferBtn').onclick = () => {
-      navigator.clipboard.writeText(document.getElementById('offerOut').value);
-    };
+        // --- Step 1: Create Offer (Caller) ---
+        document.getElementById('callBtn').onclick = async () => {
+            setupDataChannel(pc.createDataChannel('chat'));
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            await waitForIceGathering();
+            const encoded = JSON.stringify(pc.localDescription);
+            //   const encoded = btoa(JSON.stringify(pc.localDescription));
+            document.getElementById('offerOut').value = encoded;
+        };
 
-    // --- Step 2: Accept Offer & Create Answer (Callee) ---
-    document.getElementById('acceptOfferBtn').onclick = async () => {
-      const encoded = document.getElementById('offerIn').value.trim();
-      const offer = JSON.parse(encoded);
-    //   const offer = JSON.parse(atob(encoded));
-      await pc.setRemoteDescription(new RTCSessionDescription(offer));
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      await waitForIceGathering();
-      const answerEncoded = JSON.stringify(pc.localDescription);
-    //   const answerEncoded = btoa(JSON.stringify(pc.localDescription));
-      document.getElementById('answerOut').value = answerEncoded;
-    };
+        document.getElementById('copyOfferBtn').onclick = () => {
+            navigator.clipboard.writeText(document.getElementById('offerOut').value);
+        };
 
-    document.getElementById('copyAnswerBtn').onclick = () => {
-      navigator.clipboard.writeText(document.getElementById('answerOut').value);
-    };
+        // --- Step 2: Accept Offer & Create Answer (Callee) ---
+        document.getElementById('acceptOfferBtn').onclick = async () => {
+            const encoded = document.getElementById('offerIn').value.trim();
+            const offer = JSON.parse(encoded);
+            //   const offer = JSON.parse(atob(encoded));
+            await pc.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            await waitForIceGathering();
+            const answerEncoded = JSON.stringify(pc.localDescription);
+            //   const answerEncoded = btoa(JSON.stringify(pc.localDescription));
+            document.getElementById('answerOut').value = answerEncoded;
+        };
 
-    // --- Step 4: Accept Answer (Caller) ---
-    document.getElementById('acceptAnswerBtn').onclick = async () => {
-      const encoded = document.getElementById('answerIn').value.trim();
-      const answer = JSON.parse(encoded);
-    //   const answer = JSON.parse(atob(encoded));
-      await pc.setRemoteDescription(new RTCSessionDescription(answer));
-    };
+        document.getElementById('copyAnswerBtn').onclick = () => {
+            navigator.clipboard.writeText(document.getElementById('answerOut').value);
+        };
 
-    // --- Chat Send ---
-    document.getElementById('sendBtn').onclick = () => {
-      const input = document.getElementById('chatInput');
-      if (dc && dc.readyState === 'open') {
-        dc.send(input.value);
-        logChat('You', input.value);
-        input.value = '';
-      }
-    };
+        // --- Step 4: Accept Answer (Caller) ---
+        document.getElementById('acceptAnswerBtn').onclick = async () => {
+            const encoded = document.getElementById('answerIn').value.trim();
+            const answer = JSON.parse(encoded);
+            //   const answer = JSON.parse(atob(encoded));
+            await pc.setRemoteDescription(new RTCSessionDescription(answer));
+        };
 
-    document.getElementById('chatInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('sendBtn').click();
-    });
-  </script>
+        // --- Chat Send ---
+        document.getElementById('sendBtn').onclick = () => {
+            const input = document.getElementById('chatInput');
+            if (dc && dc.readyState === 'open') {
+                dc.send(input.value);
+                logChat('You', input.value);
+                input.value = '';
+            }
+        };
+
+        document.getElementById('chatInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('sendBtn').click();
+        });
+    </script>
 </body>
+
 </html>
