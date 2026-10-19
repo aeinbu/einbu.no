@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Personal Archive — Everything that matters, in one place</title>
+<meta name="description" content="Keep receipts, warranties, letters, PDFs, photos and email in one organised system you can actually search. Managed or self-hosted.">
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --surface: #ffffff;
+    --ink: #1c1b19;
+    --ink-soft: #55524d;
+    --line: #e4e0d9;
+    --accent: #1f6f5c;
+    --accent-soft: #eaf4f1;
+    --radius: 14px;
+    --wrap: 68rem;
+    --step-0: 1rem;
+    --step-1: 1.15rem;
+    --step-2: 1.4rem;
+    --step-3: 1.9rem;
+    --step-4: 2.6rem;
+    --step-5: 3.4rem;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--step-0);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { line-height: 1.2; text-wrap: balance; margin: 0 0 .6em; }
+  h1 { font-size: clamp(2.1rem, 5vw, var(--step-5)); letter-spacing: -.02em; }
+  h2 { font-size: clamp(1.5rem, 3.2vw, var(--step-4)); letter-spacing: -.015em; }
+  h3 { font-size: var(--step-2); }
+  p { margin: 0 0 1rem; text-wrap: pretty; }
+
+  a { color: var(--accent); text-underline-offset: .18em; }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .wrap {
+    width: min(100% - 2.5rem, var(--wrap));
+    margin-inline: auto;
+  }
+
+  .skip {
+    position: absolute; left: -9999px;
+    background: var(--surface); padding: .75rem 1rem; z-index: 99;
+  }
+  .skip:focus { left: 1rem; top: 1rem; }
+
+  section { padding-block: clamp(3rem, 7vw, 5.5rem); }
+  section + section { border-top: 1px solid var(--line); }
+
+  .lede { font-size: var(--step-1); color: var(--ink-soft); max-width: 46ch; }
+  .kicker {
+    font-size: .8rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .9rem;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background:
+      radial-gradient(80rem 30rem at 75% -10%, var(--accent-soft), transparent 70%),
+      var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+  }
+  .hero h1 { max-width: 18ch; }
+  .hero .lede { font-size: clamp(1.05rem, 2.2vw, 1.3rem); max-width: 52ch; }
+
+  .cta-row {
+    display: flex; flex-wrap: wrap; gap: .75rem 1rem;
+    align-items: center; margin-top: 2rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: .85rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 650;
+    font-size: .98rem;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    transition: transform .12s ease, background-color .15s ease, color .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #175648; }
+  .btn-secondary {
+    background: transparent; color: var(--ink); border-color: var(--line);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-link {
+    font-weight: 600; text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+
+  .micro { font-size: .88rem; color: var(--ink-soft); margin-top: 1rem; }
+
+  /* ---------- Trust strip ---------- */
+  .strip {
+    background: var(--ink); color: #f4f1ec;
+    padding-block: 1rem; font-size: .92rem;
+  }
+  .strip ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: .5rem 1.75rem;
+    justify-content: center; text-align: center;
+  }
+  .strip li::before { content: "✓"; margin-right: .5rem; color: #8fd0bd; }
+
+  /* ---------- Generic grid ---------- */
+  .grid {
+    display: grid; gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+  .card h3 { font-size: 1.1rem; margin-bottom: .35rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card p { color: var(--ink-soft); font-size: .95rem; }
+
+  /* ---------- Steps ---------- */
+  .steps { counter-reset: step; list-style: none; margin: 0; padding: 0; }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 3.75rem;
+    margin-bottom: 1.75rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: .1rem;
+    width: 2.5rem; height: 2.5rem;
+    display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent);
+    border-radius: 50%; font-weight: 700;
+  }
+  .steps strong { display: block; font-size: 1.1rem; }
+  .steps span { color: var(--ink-soft); }
+
+  /* ---------- Hosting options ---------- */
+  .options {
+    display: grid; gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+  }
+  .option {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex; flex-direction: column;
+  }
+  .option--featured { border-color: var(--accent); box-shadow: 0 12px 34px -22px rgba(31,111,92,.55); }
+  .option .tag {
+    align-self: flex-start;
+    font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase;
+    background: var(--accent-soft); color: var(--accent);
+    padding: .3rem .65rem; border-radius: 999px; margin-bottom: .9rem;
+  }
+  .option p { color: var(--ink-soft); }
+  .option .best {
+    font-size: .9rem; color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 1rem; margin: .5rem 0 1.5rem;
+  }
+  .option .best b { color: var(--ink); }
+  .option .btn { margin-top: auto; text-align: center; }
+
+  .switch {
+    margin-top: 2rem;
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+  }
+  .switch h3 { font-size: 1.15rem; margin-bottom: .4rem; }
+  .switch p:last-child { margin-bottom: 0; }
+
+  /* ---------- Tables ---------- */
+  .table-scroll { overflow-x: auto; margin-top: 1.75rem; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 34rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: .95rem;
+  }
+  caption {
+    text-align: left; color: var(--ink-soft);
+    font-size: .9rem; padding-bottom: .75rem;
+  }
+  th, td { padding: .85rem 1.1rem; text-align: left; vertical-align: top; }
+  thead th {
+    background: var(--ink); color: #f4f1ec;
+    font-size: .8rem; letter-spacing: .06em; text-transform: uppercase;
+  }
+  tbody tr + tr th, tbody tr + tr td { border-top: 1px solid var(--line); }
+  tbody th { font-weight: 600; }
+  tbody tr:nth-child(even) { background: #faf9f7; }
+
+  /* ---------- FAQ ---------- */
+  .faq { max-width: 52rem; }
+  .faq details {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: .9rem 1.25rem;
+    margin-bottom: .75rem;
+  }
+  .faq details[open] { border-color: var(--accent); }
+  .faq summary {
+    cursor: pointer; font-weight: 650; list-style: none;
+    display: flex; justify-content: space-between; gap: 1rem; align-items: center;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--accent); font-size: 1.3rem; line-height: 1; }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { margin: .8rem 0 0; color: var(--ink-soft); }
+
+  /* ---------- Final CTA ---------- */
+  .final {
+    background: var(--ink); color: #f4f1ec; text-align: center;
+    border-top: none;
+  }
+  .final h2 { color: #fff; max-width: 22ch; margin-inline: auto; }
+  .final p { color: #c9c4bc; max-width: 52ch; margin-inline: auto; }
+  .final .cta-row { justify-content: center; }
+  .final .btn-secondary { color: #f4f1ec; border-color: #4a4640; }
+  .final .btn-secondary:hover { color: #fff; border-color: #fff; }
+
+  footer {
+    background: var(--ink); color: #9c968d;
+    font-size: .85rem; text-align: center;
+    padding: 0 1.25rem 3rem;
+    border-top: 1px solid #2e2c29;
+  }
+  footer p { margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">My Personal Archive</p>
+    <h1>Everything that matters, in one place.</h1>
+    <p class="lede">
+      Life admin, receipts, warranties, important letters, family records —
+      the paperwork of being a person, finally organised. Keep receipts, letters,
+      PDFs, photos and email in one system you can actually search.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#pricing">Start your archive</a>
+      <a class="btn btn-secondary" href="#hosting">See how self-hosting works</a>
+      <a class="btn-link" href="#how">Take the 2-minute tour</a>
+    </div>
+    <p class="micro">Free for your first 500 documents. No card required.</p>
+  </div>
+</header>
+
+<!-- ============ TRUST STRIP ============ -->
+<div class="strip">
+  <div class="wrap">
+    <ul>
+      <li>Private by default</li>
+      <li>Full-text search</li>
+      <li>Yours to export, always</li>
+    </ul>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ============ PROBLEM ============ -->
+  <section aria-labelledby="problem-h">
+    <div class="wrap">
+      <h2 id="problem-h">You already have the documents. You just can't find them.</h2>
+      <p class="lede">
+        The warranty is in an email. The receipt is a photo somewhere. The insurance
+        letter is in a drawer you'd rather not open. The kids' vaccination records are
+        in a portal you've forgotten the password to.
+      </p>
+      <p class="lede">
+        Nothing is lost. It's just scattered across six places that don't talk to each
+        other — and the moment you need something, you need it <em>now</em>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IT HOLDS ============ -->
+  <section aria-labelledby="holds-h">
+    <div class="wrap">
+      <h2 id="holds-h">What your archive holds</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Receipts &amp; invoices</h3>
+          <p>Snap it, and it's filed, dated and searchable by shop, amount or item.</p>
+        </article>
+        <article class="card">
+          <h3>Warranties &amp; manuals</h3>
+          <p>Know what's covered, until when, and where the proof lives.</p>
+        </article>
+        <article class="card">
+          <h3>Letters &amp; official post</h3>
+          <p>Bills, tax, insurance, legal — scanned, tagged, never buried again.</p>
+        </article>
+        <article class="card">
+          <h3>Family records</h3>
+          <p>Birth certificates, passports, medical notes, school paperwork.</p>
+        </article>
+        <article class="card">
+          <h3>PDFs &amp; scans</h3>
+          <p>Drag in a folder, or forward an email. We'll take it from there.</p>
+        </article>
+        <article class="card">
+          <h3>Photos of paper</h3>
+          <p>Point your phone at a document; we'll clean it up and read the text.</p>
+        </article>
+        <article class="card">
+          <h3>Email</h3>
+          <p>Forward the important ones in. They land in the right place.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <h2 id="how-h">How it works</h2>
+      <ol class="steps">
+        <li>
+          <strong>Get it in.</strong>
+          <span>Upload, drag-and-drop, email it in, or scan with your phone. Bulk
+          import from a folder if you're bringing years of history.</span>
+        </li>
+        <li>
+          <strong>We make sense of it.</strong>
+          <span>Documents are read, dated, categorised and tagged automatically.
+          Search by any word on the page — or by what you remember about it.</span>
+        </li>
+        <li>
+          <strong>Find it in seconds.</strong>
+          <span>Type "boiler warranty" or "2023 tax" and it's there. Share with a
+          partner or family member when you need to.</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ HOSTING CHOICE ============ -->
+  <section id="hosting" aria-labelledby="hosting-h">
+    <div class="wrap">
+      <h2 id="hosting-h">Choose how you run it</h2>
+      <p class="lede">
+        Your archive. Your call. Same app, same search, same peace of mind — you just
+        decide who holds the keys.
+      </p>
+
+      <div class="options">
+        <article class="option option--featured">
+          <p class="tag">Option A</p>
+          <h3>Managed</h3>
+          <p><strong>We host it. You get on with your life.</strong></p>
+          <p>
+            Set up in under five minutes. Automatic backups, updates and mobile apps
+            handled for you. Encrypted at rest and in transit, accessible from any device.
+          </p>
+          <p class="best"><b>Best for:</b> most people. Especially if you'd rather not
+          think about servers.</p>
+          <a class="btn btn-primary" href="#pricing">Create my archive</a>
+        </article>
+
+        <article class="option">
+          <p class="tag">Option B</p>
+          <h3>Self-hosted</h3>
+          <p><strong>Your server. Your data. Nothing leaves your house.</strong></p>
+          <p>
+            Run the whole thing on your own hardware — a home server, a NAS, a VPS, a
+            Raspberry Pi. Your documents never touch our infrastructure, because there
+            isn't any. You keep the database, the files and the backups.
+          </p>
+          <p>
+            One command to install. Full API, Docker image, and a documented data
+            format you can read without us.
+          </p>
+          <p class="best"><b>Best for:</b> the technically comfortable, the
+          privacy-first, and anyone who wants their family's records to outlive any
+          company.</p>
+          <a class="btn btn-secondary" href="#docs">Read the self-hosting guide</a>
+        </article>
+      </div>
+
+      <div class="switch">
+        <h3>Not sure? Switch whenever.</h3>
+        <p>
+          Start managed, migrate to self-hosted later — or the other way round. Your
+          data exports in an open format either way. No lock-in, no hostage-taking,
+          no "contact sales to leave".
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPARISON ============ -->
+  <section id="pricing" aria-labelledby="compare-h">
+    <div class="wrap">
+      <h2 id="compare-h">Comparison at a glance</h2>
+      <div class="table-scroll">
+        <table>
+          <caption>Managed versus self-hosted — the same product, two ways to run it.</caption>
+          <thead>
+            <tr>
+              <th scope="col">&nbsp;</th>
+              <th scope="col">Managed</th>
+              <th scope="col">Self-hosted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Setup time</th>
+              <td>Under 5 minutes</td>
+              <td>~30 minutes</td>
+            </tr>
+            <tr>
+              <th scope="row">Where your files live</th>
+              <td>Encrypted cloud storage</td>
+              <td>Your hardware</td>
+            </tr>
+            <tr>
+              <th scope="row">Automatic backups</th>
+              <td>Included</td>
+              <td>You configure them</td>
+            </tr>
+            <tr>
+              <th scope="row">Updates &amp; maintenance</th>
+              <td>Handled for you</td>
+              <td>You run them</td>
+            </tr>
+            <tr>
+              <th scope="row">Mobile &amp; web apps</th>
+              <td>Included</td>
+              <td>Included</td>
+            </tr>
+            <tr>
+              <th scope="row">Full-text search</th>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Offline access</th>
+              <td>Limited</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Open export format</th>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <th scope="row">Cost</th>
+              <td>Monthly subscription</td>
+              <td>Free / your hardware costs</td>
+            </tr>
+            <tr>
+              <th scope="row">Best for</th>
+              <td>Getting it done today</td>
+              <td>Total control</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST ============ -->
+  <section aria-labelledby="trust-h">
+    <div class="wrap">
+      <h2 id="trust-h">Why people trust it with the important stuff</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Private by design</h3>
+          <p>Documents are encrypted in transit and at rest. Nothing is used to train
+          anything, ever.</p>
+        </article>
+        <article class="card">
+          <h3>Searchable down to the word</h3>
+          <p>Not just filenames — the actual text inside your scans and PDFs.</p>
+        </article>
+        <article class="card">
+          <h3>Built for a household</h3>
+          <p>Share a folder with your partner. Give the kids their own space. Keep the
+          rest to yourself.</p>
+        </article>
+        <article class="card">
+          <h3>Yours forever</h3>
+          <p>Export everything, any time, in a format that opens without us.</p>
+        </article>
+        <article class="card">
+          <h3>It'll still be here</h3>
+          <p>Open formats, no proprietary traps. Your archive is a folder of files, not
+          a hostage situation.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section aria-labelledby="faq-h">
+    <div class="wrap">
+      <h2 id="faq-h">Questions, answered</h2>
+      <div class="faq">
+        <details>
+          <summary>Is my data encrypted?</summary>
+          <p>Yes — in transit and at rest. On self-hosted installs, encryption keys never
+          leave your machine.</p>
+        </details>
+        <details>
+          <summary>Can I import what I already have?</summary>
+          <p>Yes. Drag in folders, bulk-upload, or forward emails. Most people move years
+          of paperwork in an afternoon.</p>
+        </details>
+        <details>
+          <summary>What if I want to leave?</summary>
+          <p>Export everything in one click. Your documents, your metadata, your
+          structure — in open formats.</p>
+        </details>
+        <details>
+          <summary>Does it work on my phone?</summary>
+          <p>Yes. Scan a document with your camera and it's filed before you've put the
+          kettle on.</p>
+        </details>
+        <details>
+          <summary>Do I need to be technical?</summary>
+          <p>Only if you choose self-hosting. The managed option is genuinely a
+          five-minute setup.</p>
+        </details>
+        <details>
+          <summary>What does it cost?</summary>
+          <p>Managed plans start at £X/month. Self-hosting is free — you only pay for
+          your own hardware.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final" aria-labelledby="final-h">
+  <div class="wrap">
+    <h2 id="final-h">Everything that matters, in one place.</h2>
+    <p>
+      Start today. Bring the drawer, the inbox and the shoebox under one roof — and
+      never dig for a warranty again.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#pricing">Start your archive</a>
+      <a class="btn btn-secondary" href="#docs">Explore self-hosting</a>
+    </div>
+  </div>
+</section>
+
+<footer id="docs">
+  <div class="wrap">
+    <p>Built for households, not shareholders. Export anytime. Delete anytime.
+    No dark patterns.</p>
+  </div>
+</footer>
+
+</body>
+</html>

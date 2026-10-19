@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Float demo</title>
+</head>
+
+<style>
+
+
+    .box::after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    .right-justify {
+        float: right;
+    }
+
+    .pills {
+        width: fit-content;
+    }
+
+</style>
+
+<div class="box">
+    <span>My Title Text</span>
+    <span class="right-justify">to-the-right-if-room</span>
+    <div class="pills">
+        <span class="pill">receipt</span>
+        <span class="pill">dall</span>
+    </div>
+</div>
+<div class="box">
+    <span>My Title Text</span>
+    <span class="right-justify">to-the-right-if-room</span>
+    <div class="pills">
+    </div>
+</div>
+<div class="box">
+    <span>lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+    magna aliqua.</span>
+    <span class="right-justify">to-the-right-if-room</span>
+    <div class="pills">
+    </div>
+</div>
+<div class="box">
+    <span>lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+    magna aliqua.</span>
+    <span class="right-justify">to-the-right-if-room</span>
+    <div class="pills">
+        <span class="pill">receipt</span>
+        <span class="pill">travel doc</span>
+        <span class="pill">dill</span>
+        <span class="pill">dall</span>
+    </div>
+</div>
+
+
+</html>
